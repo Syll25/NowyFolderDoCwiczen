@@ -7,32 +7,40 @@ public class Main {
 
     public static void main(String[] args) {
 
-        List<Integer> wynik = naszaMetoda(new int[]{2, 3, 4});
+        int[] tablicaJednowymiarowa = {2, 3, 4};
+        List<Integer> wynik = naszaMetoda(tablicaJednowymiarowa);
 
         System.out.println("Liczby parzyste dla jednowymiarowej tablicy: ");
         for (int i = 0; i < wynik.size(); i++) {
             System.out.println(wynik.get(i));
         }
 
-        List<Integer> wynikDlaCztero = naszaMetodaCzterowTablicy(
-                new int[][][][]{
-                        {{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}},
-                        {{{9, 10}, {11, 12}}, {{13, 14}, {15, 16}}}
-                }
-        );
+        int sumaJednowymiarowa = sumaParzystychJednowymiarowej(tablicaJednowymiarowa);
+        System.out.println("Suma liczb parzystych dla tablicy jednowymiarowej: " + sumaJednowymiarowa);
 
-        List<Integer> wynikDlaSiedmio = naszaMetodaSiedmioTablicy(
-                new int[][][][][][][]{
-                        {
-                                {{{{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}}},
-                                        {{{{9, 10}, {11, 12}}, {{13, 14}, {15, 16}}}}}
-                        },
-                        {
-                                {{{{{17, 18}, {19, 20}}, {{21, 22}, {23, 24}}}},
-                                        {{{{25, 26}, {27, 28}}, {{29, 30}, {31, 32}}}}}
-                        }
+        int[][][][] tablicaCzterowymiarowa = {
+                {{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}},
+                {{{9, 10}, {11, 12}}, {{13, 14}, {15, 16}}}
+        };
+        List<Integer> wynikDlaCztero = naszaMetodaCzterowTablicy(tablicaCzterowymiarowa);
+
+        int sumaCzterowymiarowa = sumaParzystychCzterowymiarowej(tablicaCzterowymiarowa);
+        System.out.println("Suma liczb parzystych dla tablicy czterowymiarowe: " + sumaCzterowymiarowa);
+
+        int [][][][][][][] tablicaSiedmiowymiarowa = {
+                {
+                        {{{{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}}},
+                                {{{{9, 10}, {11, 12}}, {{13, 14}, {15, 16}}}}}
+                },
+                {
+                        {{{{{17, 18}, {19, 20}}, {{21, 22}, {23, 24}}}},
+                                {{{{25, 26}, {27, 28}}, {{29, 30}, {31, 32}}}}}
                 }
-        );
+        };
+        List<Integer> wynikDlaSiedmio = naszaMetodaSiedmioTablicy(tablicaSiedmiowymiarowa);
+
+        int sumaSiedmiowymiarowa = sumaParzystychSiedmiowymiarowej(tablicaSiedmiowymiarowa);
+        System.out.println("Suma liczb parzystych dla tablicy siedmiowymiarowej: " + sumaSiedmiowymiarowa);
 
         System.out.println("Liczby parzyste dla czterowymiarowej tablicy: ");
         for (int i = 0; i < wynikDlaCztero.size(); i++) {
@@ -61,6 +69,9 @@ public class Main {
             return false;
         } else return true;
     }
+    //    public static boolean czyParzysta(int pojed) {
+    //    return pojed % 2 == 0;
+    //}
 
     public static List<Integer> naszaMetodaCzterowTablicy(int[][][][] czteroTablica) {
         List<Integer> nameCzterowymiarowe = new ArrayList<>();

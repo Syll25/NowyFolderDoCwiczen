@@ -1,49 +1,39 @@
 package org.example;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main3 {
 
 
     public static void main(String[] args) {
 
-        User user = new User("Jacek", User.TypUmowy.JDG, User.Wiek.sredni, User.Plec.mezczyzna);
-        User user2 = new User("Jola", User.TypUmowy.UOP, User.Wiek.zaawansowany, User.Plec.kobieta);
-        User user3 = new User("Mateusz", User.TypUmowy.ZLECENIE, User.Wiek.poczatkujacy, User.Plec.mezczyzna);
+        User user1 = new User("Jacek", User.TypUmowy.JDG, 45, User.Plec.mezczyzna);
+        User user2 = new User("Jola", User.TypUmowy.UOP, 35, User.Plec.kobieta);
+        User user3 = new User("Mateusz", User.TypUmowy.ZLECENIE, 18, User.Plec.mezczyzna);
+        User user4 = new User("Ilona", User.TypUmowy.ZLECENIE, 25, User.Plec.kobieta);
 
-        User[] users = {user, user2, user3};
+        User[] users = {user1, user2, user3, user4};
 
-        List<User> przypisaniUzytkownicy = metodaZwracania(users);
+        List<User> przypisaniUzytkownicy = metodaZwracania(users, 30, 40, User.TypUmowy.UOP, User.Plec.kobieta);
 
-        for (int i = 0; i < przypisaniUzytkownicy.size(); i++) {
-            System.out.println("Pracownik o imieniu: " + przypisaniUzytkownicy.get(i).imie + ". Wiek: " + przypisaniUzytkownicy.get(i).wiek + ". Płeć: " + przypisaniUzytkownicy.get(i).plec);
-        }
+        przypisaniUzytkownicy.forEach(user ->
+                System.out.println("Imie pracownika: " + user.imie + "\nWiek: " + user.wiek + "\nTyp umowy: " + user.umowa)
+        );
     }
 
     public static class User {
         public String imie;
         public TypUmowy umowa;
-        public Wiek wiek;
+        public int wiek;
         public Plec plec;
 
         enum TypUmowy {JDG, ZLECENIE, UOP}
 
-        enum Wiek {
-            poczatkujacy(18),
-            sredni(40),
-            zaawansowany(60);
-
-            private int zakresWiekowy;
-
-            Wiek(int zakresWiekowy) {
-                this.zakresWiekowy = zakresWiekowy;
-            }
-        }
-
         enum Plec {kobieta, mezczyzna}
 
-        public User(String imie, TypUmowy umowa, Wiek wiek, Plec plec) {
+        public User(String imie, TypUmowy umowa, int wiek, Plec plec) {
             this.imie = imie;
             this.umowa = umowa;
             this.wiek = wiek;
@@ -51,15 +41,13 @@ public class Main3 {
         }
     }
 
-    public static List<User> metodaZwracania(User[] users) {
-        List<User> finalni = new ArrayList<>();
+    public static List<User> metodaZwracania(User[] users, int wiekMin, int wiekMax, User.TypUmowy typUmowy, User.Plec plec) {
 
-        for (int i = 0; i < users.length; i++) {
-            if (users[i].umowa == User.TypUmowy.UOP) {
-                finalni.add(users[i]);
-            }
-        }
-        return finalni;
+        return Arrays.stream(users)
+                .filter(user -> user.wiek >= wiekMin && user.wiek <= wiekMax)
+                .filter(user -> user.plec == plec)
+                .filter(user -> user.umowa == typUmowy)
+                .collect(Collectors.toList());
 
     }
 

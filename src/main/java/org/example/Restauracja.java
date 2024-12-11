@@ -4,6 +4,12 @@ import java.util.*;
 
 public class Restauracja {
 
+    Kelner kelner;
+
+    public Restauracja() {
+        this.kelner = new Kelner(new Kuchnia());
+    }
+
     enum PizzaType {
         pepperoni, hawajska, serowa
     }
@@ -13,36 +19,46 @@ public class Restauracja {
     }
 
     public static void main(String[] args) {
+        Restauracja restauracja = new Restauracja();
+        restauracja.otworz();
 
+    }
+
+    void otworz() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Podaj rodzaj pizzy: pepperoni, hawajska, serowa. ");
         String nazwaPizzy = scanner.nextLine();
 
         try {
             PizzaType pizzaType = PizzaType.valueOf(nazwaPizzy);
-            Kelner kelner = new Kelner();
-
             List<Skladnik> skladniki = kelner.przyniesPizze(pizzaType);
 
             System.out.println("Twoja pizza zawiera skladniki: ");
-            for (Skladnik skladnik : skladniki) {
+            for (Skladnik skladnik : skladniki.reversed()) {
                 System.out.println(skladnik.name().substring(0, 1).repeat(10) + " " + "(" + skladnik.name() + ")");
             }
         } catch (RuntimeException e) {
-            System.out.println("Nie mozna zrobic pizzy ");
+            System.out.println("Nie mozna zrobic pizzy (" + e.getMessage() + ")");
         }
     }
 
     public static class Kelner {
-        Kuchnia kuchnia = new Kuchnia();
 
-        public static List<Skladnik> przyniesPizze(PizzaType rodziajPizzy) {
-            return Kuchnia.zrobPizze(rodziajPizzy);
+        private final Kuchnia kuchnia;
+
+        public Kelner(Kuchnia kuchnia) {
+            this.kuchnia = kuchnia;
+        }
+
+        public List<Skladnik> przyniesPizze(PizzaType rodziajPizzy) {
+
+            // wyliczyć rachunek
+            return kuchnia.zrobPizze(rodziajPizzy);
         }
     }
 
     public static class Kuchnia {
-        static Map<Skladnik, Integer> spizarnia = new EnumMap<>(Skladnik.class);
+        static Map<Skladnik, Integer> spizarnia = new HashMap<>();
 
         public Kuchnia() {
 
@@ -57,26 +73,29 @@ public class Restauracja {
 
         }
 
-        public static void pobieranieSkladnikow(Skladnik skladnik) {
+        public static Skladnik pobieranieSkladnikow(Skladnik skladnik) {
+
             int ilosc = spizarnia.getOrDefault(skladnik, 0);
             if (ilosc > 0) {
                 spizarnia.put(skladnik, ilosc - 1);
             } else {
                 throw new RuntimeException("Brak skladnika: " + skladnik.name());
             }
+            return skladnik;
         }
 
 
-        public static List<Skladnik> zrobPizze(PizzaType rodzajPizzy) {
+        public List<Skladnik> zrobPizze(PizzaType rodzajPizzy) {
             List<Skladnik> skladniki = new ArrayList<>();
 
             switch (rodzajPizzy) {
                 case pepperoni -> {
-                    skladniki.add(Skladnik.ciasto);
-                    skladniki.add(Skladnik.sos);
-                    skladniki.add(Skladnik.ser);
-                    skladniki.add(Skladnik.pieczarki);
-                    skladniki.add(Skladnik.salami);
+
+                    skladniki.add(pobieranieSkladnikow(Skladnik.ciasto));
+                    skladniki.add(pobieranieSkladnikow(Skladnik.sos));
+                    skladniki.add(pobieranieSkladnikow(Skladnik.ser));
+                    skladniki.add(pobieranieSkladnikow(Skladnik.pieczarki));
+                    skladniki.add(pobieranieSkladnikow(Skladnik.salami));
                 }
                 case hawajska -> {
                     skladniki.add(Skladnik.ciasto);
